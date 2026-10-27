@@ -1,0 +1,29 @@
+# Configuration from the environment (twelve-factor); the values below are defaults for the compose stack.
+spring:
+  application:
+    name: restartable-import
+  datasource:
+    url: ${DB_URL:jdbc:postgresql://localhost:55531/catalog}
+    username: ${DB_USER:catalog}
+    password: ${DB_PASSWORD:}
+    hikari:
+      maximum-pool-size: 5
+      connection-timeout: 20000
+  batch:
+    job:
+      enabled: false          # the runner starts the job, with parameters, when asked
+    jdbc:
+      initialize-schema: never # the schema is sql/001_spring_batch_schema.sql
+  main:
+    banner-mode: off
+    web-application-type: none
+logging:
+  level:
+    root: INFO
+    org.springframework.batch: WARN
+
+import:
+  chunk-size: ${IMPORT_CHUNK_SIZE:1000}
+  skip-limit: ${IMPORT_SKIP_LIMIT:500}
+  retry-limit: ${IMPORT_RETRY_LIMIT:3}
+  transient-fault-every-nth-chunk: ${IMPORT_TRANSIENT_FAULT_EVERY_NTH_CHUNK:0}
