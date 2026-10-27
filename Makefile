@@ -63,7 +63,9 @@ too-many-bad: build reset ## a file with 600 bad rows fails the step: Skip limit
 	$(APP) --command=summary
 
 retry-demo: build reset generate ## step 6: every fiftieth chunk fails once; the job completes with skip_count 100
-	IMPORT_TRANSIENT_FAULT_EVERY_NTH_CHUNK=50 $(APP) --command=import --import.file=data/products.csv --run.id=retry-1
+	@mkdir -p logs
+	IMPORT_TRANSIENT_FAULT_EVERY_NTH_CHUNK=50 $(APP) --command=import --import.file=data/products.csv --run.id=retry-1 2> logs/retry-demo.err
+	@echo "transient failures injected and retried: $$(grep -c 'injected transient failure' logs/retry-demo.err)"
 	$(APP) --command=summary
 
 summary: build ## the job repository and the product count
