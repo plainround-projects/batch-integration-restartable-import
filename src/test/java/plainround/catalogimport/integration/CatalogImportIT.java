@@ -66,7 +66,7 @@ class CatalogImportIT {
     List<String> lines = Files.readAllLines(rejects);
     assertThat(lines).hasSize(10);
     assertThat(lines.getFirst())
-        .startsWith("line 2002: SKU-002000,weapons,")
+        .startsWith("line 2001: SKU-002000,weapons,")
         .endsWith("-> unknown category weapons");
   }
 

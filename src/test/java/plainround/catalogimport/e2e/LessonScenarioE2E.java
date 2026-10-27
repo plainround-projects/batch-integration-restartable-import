@@ -71,8 +71,8 @@ class LessonScenarioE2E {
     assertThat(count("SELECT count(*) FROM product")).isEqualTo(199_900);
     List<String> rejects = Files.readAllLines(folder.resolve("rejects.txt"));
     assertThat(rejects).hasSize(100);
-    assertThat(rejects.getFirst()).startsWith("line 2002: SKU-002000,weapons,");
-    assertThat(rejects.get(1)).startsWith("line 4002: BAD4000,");
+    assertThat(rejects.getFirst()).startsWith("line 2001: SKU-002000,weapons,");
+    assertThat(rejects.get(1)).startsWith("line 4001: BAD4000,");
   }
 
   @Test
