@@ -1,0 +1,31 @@
+# The database for the import: the product table, the reject record and Spring Batch's job repository.
+# Local use only. The import itself runs on the host (`make run`) or from the image (`make docker-build`).
+name: batch-integration-restartable-import
+
+services:
+  postgres:
+    image: postgres:16
+    ports:
+      - "${POSTGRES_PORT:-55531}:5432"
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-catalog}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?copy .env.example to .env first}
+      POSTGRES_DB: ${POSTGRES_DB:-catalog}
+    shm_size: 256mb
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -h 127.0.0.1 -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 10s
+      retries: 30
+      start_period: 5s
+    volumes:
+      - catalog-data:/var/lib/postgresql/data
+
+volumes:
+  catalog-data:
+
+networks:
+  default:
+    ipam:
+      config:
+        - subnet: 10.231.4.0/24
