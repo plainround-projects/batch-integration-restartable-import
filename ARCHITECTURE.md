@@ -77,7 +77,7 @@ flowchart LR
 
 | Failure | What you see | Reproduce |
 | --- | --- | --- |
-| **Bad rows** | `skipped=100`; `rejects.txt` has 100 lines like `line 2002: SKU-002000,weapons,87.12 -> unknown category weapons` | `make run` |
+| **Bad rows** | `skipped=100`; `rejects.txt` has 100 lines like `line 2001: SKU-002000,weapons,295.31 -> unknown category weapons` | `make run` |
 | **Too many bad rows** | `FAILED ... Skip limit of '500' exceeded` | `make too-many-bad` |
 | **A crash in the middle** (`kill -9`) | the first step execution stays `STARTED` with its last commit's counts; the restart marks it failed, resumes at the saved line, and the two executions add up to the file | `make crash-test` |
 | **Running the whole thing again** | with a new `run.id`: still 199,900 rows. With the same `run.id`: `ALREADY_COMPLETE`, exit 3 | `make run-new-id`, `make run-twice` |
