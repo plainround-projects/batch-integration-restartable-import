@@ -4,6 +4,7 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicLong;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.item.Chunk;
 import org.springframework.batch.item.ItemWriter;
 import org.springframework.dao.TransientDataAccessResourceException;
@@ -14,6 +15,7 @@ import plainround.catalogimport.domain.ProductRow;
  * lesson's step 6), so the retry policy can be seen working. A retried chunk reaches the writer
  * again with the same first row and succeeds.
  */
+@Slf4j
 @RequiredArgsConstructor
 public class TransientFaultInjector implements ItemWriter<ProductRow> {
 
@@ -27,6 +29,9 @@ public class TransientFaultInjector implements ItemWriter<ProductRow> {
   public void write(Chunk<? extends ProductRow> chunk) throws Exception {
     if (shouldFail(chunk)) {
       injected.incrementAndGet();
+      log.warn(
+          "injected transient failure for the chunk starting at line {}",
+          chunk.getItems().getFirst().lineNumber());
       throw new TransientDataAccessResourceException("injected transient failure");
     }
     delegate.write(chunk);

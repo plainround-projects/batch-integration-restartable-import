@@ -96,8 +96,8 @@ public class ImportRunner implements ApplicationRunner, ExitCodeGenerator {
   }
 
   private int healthCommand(ApplicationArguments args) {
-    Integer one = jdbc.queryForObject("SELECT count(*) FROM product WHERE false", Integer.class);
-    System.out.println("ok database reachable and the product table exists (" + one + ")");
+    Long products = jdbc.queryForObject("SELECT count(*) FROM product", Long.class);
+    System.out.println("ok database reachable, " + products + " products");
     return 0;
   }
 

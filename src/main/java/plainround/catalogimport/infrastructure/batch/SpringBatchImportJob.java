@@ -1,5 +1,6 @@
 package plainround.catalogimport.infrastructure.batch;
 
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.batch.core.BatchStatus;
 import org.springframework.batch.core.Job;
@@ -51,7 +52,20 @@ public class SpringBatchImportJob implements ImportJob {
         step.getSkipCount(),
         step.getCommitCount(),
         resumed,
-        execution.getExitStatus().getExitDescription());
+        causes(execution.getExitStatus().getExitDescription()));
+  }
+
+  /**
+   * The exit description holds whole stack traces; the report keeps the lines that name the causes.
+   */
+  private static String causes(String description) {
+    String text =
+        description
+            .lines()
+            .map(String::strip)
+            .filter(line -> !line.isEmpty() && !line.startsWith("at ") && !line.startsWith("..."))
+            .collect(Collectors.joining(" "));
+    return text.length() > 300 ? text.substring(0, 300) + "..." : text;
   }
 
   private Status status(BatchStatus batchStatus) {

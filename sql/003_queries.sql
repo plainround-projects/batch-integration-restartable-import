@@ -15,13 +15,6 @@ SELECT s.job_execution_id, s.step_name, s.status, s.read_count, s.write_count, s
 FROM step_summary s
 ORDER BY s.step_execution_id;
 
--- Where the reader will resume: the saved read count of the latest step execution of each job instance.
-SELECT s.step_execution_id, s.status, c.short_context
-FROM batch_step_execution s
-JOIN batch_step_execution_context c USING (step_execution_id)
-ORDER BY s.step_execution_id DESC
-LIMIT 5;
-
 -- The skipped rows with their reasons, in file order.
 SELECT line_number, sku, category, price, reason FROM import_reject ORDER BY line_number LIMIT 10;
 
