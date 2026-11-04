@@ -9,6 +9,24 @@ A Spring Batch job that imports a product catalog of 200,000 CSV rows into Postg
 | **Level** | Beginner |
 | **Architecture** | [ARCHITECTURE.md](ARCHITECTURE.md), decisions: [docs/adr](docs/adr) |
 
+## Architecture
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/diagrams/architecture-dark.svg">
+  <img alt="ImportCatalog takes a run lock and recovers crashed runs, then launches the Spring Batch job: a flat-file reader, a validator and a JDBC batch writer in chunks of 1,000, with the job repository, reject table and products table in PostgreSQL." src="docs/diagrams/architecture.svg">
+</picture>
+
+Notice that the reader saves its position in the job repository at every commit, so a killed run resumes at the saved line, and that refused rows leave the main path for the reject table.
+
+## How one run flows
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/diagrams/flow-dark.svg">
+  <img alt="One make run takes the lock, recovers crashed runs, launches the job, commits chunks of 1,000 rows with the reader position, skips and records bad rows, retries transient errors and exports rejects.txt." src="docs/diagrams/flow.svg">
+</picture>
+
+The run ends COMPLETED with exit code 0; the amber rows show another run holding the lock, the same run submitted again, and a bad row recorded in the reject table.
+
 ## Prerequisites
 
 | Tool | Version | Used for |

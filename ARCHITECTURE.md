@@ -25,6 +25,8 @@ The batch framework is infrastructure: the job, its step, the reader, the writer
 
 ## Data flow
 
+Drawn versions of this figure and of the walk-through: [the architecture](docs/diagrams/architecture.svg) and [one run](docs/diagrams/flow.svg).
+
 ```mermaid
 flowchart LR
     csv[/"Catalog CSV<br/>200,000 rows"/]
